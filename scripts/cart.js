@@ -1,6 +1,6 @@
 var app = angular.module("RanaSweetsApp", []); 
 
-app.controller('mainController', ['$http','$scope', function($http,$scope){
+app.controller('cartController', ['$http','$scope', function($http,$scope){
 
 	$scope.range = function(min, max, step) {
     	step = step || 1;
@@ -27,8 +27,6 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 
 	$scope.DispalyProducts = angular.copy($scope.AllProducts);
 
-	$scope.Categories = [{"Name":'Sweet',"IsSelected":true},{"Name":'Farsan',"IsSelected":true}];
-
 	$scope.AddToCart = function(productName, Quantity){
 		for (var i = 0; i <$scope.CartProducts.length; i++) {
 			if($scope.CartProducts[i].Name == productName){
@@ -40,14 +38,4 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 		localStorage.setItem('RanaSweetsCart', JSON.stringify($scope.CartProducts));
 	};
 
-	$scope.FilterProductsCategories = function(){
-		var SelectedCat = [];
-		$scope.DispalyProducts = [];
-		for (var i = 0; i < $scope.Categories.length; i++) {
-			if($scope.Categories[i].IsSelected)	SelectedCat.push($scope.Categories[i].Name);
-		}
-		for (var i = 0; i < $scope.AllProducts.length; i++) {
-			if(SelectedCat.indexOf($scope.AllProducts[i].Category) > -1) $scope.DispalyProducts.push($scope.AllProducts[i]);
-		}
-	};
  }]);
