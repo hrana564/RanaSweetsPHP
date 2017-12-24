@@ -12,7 +12,7 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 	};
 
 	$scope.Categories = [];
-	$scope.CartProducts = [];
+	$scope.CartProducts = localStorage.getItem('RanaSweetsCart')!= "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
 
 	$scope.AllProducts = [
 	{"Name":"Gulab Jamun","Price":"360","Description":"very Tasty","InStock":true,"Category":"Sweet"},
@@ -33,6 +33,7 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 		for (var i = 0; i <$scope.CartProducts.length; i++) {
 			if($scope.CartProducts[i].Name == productName){
 				$scope.CartProducts[i].Quantity = Number($scope.CartProducts[i].Quantity) + Number(Quantity);
+				localStorage.setItem('RanaSweetsCart', JSON.stringify($scope.CartProducts));
 				return;
 			};
 		}
