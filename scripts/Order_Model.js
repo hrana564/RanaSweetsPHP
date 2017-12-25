@@ -5,8 +5,12 @@ function RSOrder() {
     this.Email = "",
     this.DateOfDelivery = "",
     this.Address = "",
+    this.TotalCost = "",
+    this.DiscountPercentage = "",
+    this.FinalCost = "",
     this.FinalCartProducts = [],
     this.IsDelivered = "",
-    this.RegisteredOn = "",
-    this.IsActive = ""
+    this.IsActive = "",
+    this.CreatedOn = "",
+    this.LastUpdatedOn = ""
 };
