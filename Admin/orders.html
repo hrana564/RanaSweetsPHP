@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Admin Panel</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+       .sortorder:after {
+        content: '\25b2';
+    }
+
+    .sortorder.reverse:after {
+        content: '\25bc';
+    }
+
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+    ul.pagination li a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+    ul.pagination li a.active {
+        background-color: #337AC6;
+        color: white;
+    }
+
+    ul.pagination li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+</style>
+
+<!-- Custom styles for this template -->
+<link href="../css/shop-homepage.css" rel="stylesheet">
+
+<script type="text/javascript" src="../scripts/angular.min.js"></script>
+<script type="text/javascript" src="../scripts/Order_Model.js"></script>
+<script type="text/javascript" src="../scripts/AngularGrid_Utility.js"></script>
+<script type="text/javascript" src="../scripts/Aorders.js"></script>
+
+</head>
+
+<body>
+    <div ng-app="GheeAdminApp" ng-controller="mainController">
+        <!-- Page Content -->
+        <div class="container" >
+          <div class="row">
+            <div class="col-lg-12">
+              Show <select ng-model="PageSize" ng-change="loadGrid(1)">
+              <option ng-selected="true" value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+          </select> entries
+          <div class="box-tools pull-right">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" class="form-control pull-right" placeholder="Search" ng-model="search">
+                  <div class="input-group-btn">
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+        <table class="table table-responsive table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Name')">Name</a>
+                        <span class="sortorder" ng-show="propertyName === 'Name'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Email')">Email</a>
+                        <span class="sortorder" ng-show="propertyName === 'Email'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Phone')">Phone</a>
+                        <span class="sortorder" ng-show="propertyName === 'Phone'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Address')">Address</a>
+                        <span class="sortorder" ng-show="propertyName === 'Address'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Quantity')">Quantity</a>
+                        <span class="sortorder" ng-show="propertyName === 'RegisteredOn'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('Message')">Message</a>
+                        <span class="sortorder" ng-show="propertyName === 'Message'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a style=" cursor: pointer" ng-click="sortBy('RegisteredOn')">Ordered On</a>
+                        <span class="sortorder" ng-show="propertyName === 'RegisteredOn'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="singleOrder in BindGrid | orderBy:propertyName:reverse | filter : search">
+                    <td>{{singleOrder.Name}}</td>
+                    <td>{{singleOrder.Email}}</td>
+                    <td>{{singleOrder.Phone}}</td>
+                    <td>{{singleOrder.Address}}</td>
+                    <td>{{singleOrder.Quantity}}</td>
+                    <td>{{singleOrder.Message}}</td>
+                    <td>{{singleOrder.Registered}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-lg-3" style="margin-top:30px">
+        <div class="form-group">
+            {{PagingMessage}}
+
+        </div>
+    </div>
+    <div class="pagination pagination-sm no-margin pull-right">
+        <ul class="pagination disabled">
+            <li>
+                <a ng-click="prevPage()">« Prev</a>
+            </li>
+        </ul>
+        <ul class="pagination  " ng-repeat="n in Utility.range(1,VirtualItemCount ,PageSize,1)">
+            <li><a id="P{{n}}" ng-class="{active: n == currentPage}" ng-click="loadGrid(n)">{{n}}</a></li>
+        </ul>
+        <ul class="pagination">
+            <li>
+                <a ng-click="nextPage()">Next »</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

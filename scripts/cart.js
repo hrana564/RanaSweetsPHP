@@ -7,7 +7,7 @@ var app = angular.module("RanaSweetsApp", []);
 
 app.controller('cartController', ['$http','$scope', function($http,$scope){
 
-	$scope.CartProducts = localStorage.getItem('RanaSweetsCart')!= "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
+	$scope.CartProducts = typeof localStorage.getItem('RanaSweetsCart') == "string" &&  localStorage.getItem('RanaSweetsCart') != "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
 	$scope.FinalCartProducts = [];
 	$scope.AllProducts = [
 	{"Name":"Gulab Jamun","Price":"360","Description":"very Tasty","InStock":true,"Category":"Sweet"},
@@ -54,6 +54,8 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 		"Address":""
 	}
 	$scope.PlaceOrderFinal = function () {
+		console.log($scope.PlaceOrder);
+		console.log($scope.FinalCartProducts);
 		$scope.PlaceOrder={
 			"Name":"",
 			"Mobile":"",
