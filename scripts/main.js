@@ -3,31 +3,40 @@ var app = angular.module("RanaSweetsApp", []);
 app.controller('mainController', ['$http','$scope', function($http,$scope){
 
 	$scope.range = function(min, max, step) {
-    	step = step || 1;
-	    var input = [0];
-	    for (var i = min; i <= max; i += step) {
-	        input.push(i);
-	    }
-	    return input;
+		step = step || 1;
+		var input = [0];
+		for (var i = min; i <= max; i += step) {
+			input.push(i);
+		}
+		return input;
 	};
 
 	$scope.Categories = [];
 	$scope.CartProducts = typeof localStorage.getItem('RanaSweetsCart') == "string" &&  localStorage.getItem('RanaSweetsCart') != "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
 
-	$scope.AllProducts = [
-	{"Name":"Gulab Jamun","Price":"360","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"Barfi","Price":"450","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"peda","Price":"800","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"malai Barfi","Price":"120","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"Kaju Katli","Price":"600","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"RasMalai","Price":"700","Description":"very Tasty","InStock":true,"Category":"Sweet"},
-	{"Name":"Shev","Price":"220","Description":"very Tasty","InStock":true,"Category":"Farsan"},
-	{"Name":"Gathiya","Price":"320","Description":"very Tasty","InStock":true,"Category":"Farsan"}
-	];
+	$scope.AllProducts = [];
+	$http({
+		url: window.location.origin+'/ServerPHP/Client/GetAllProducts.php',
+		method: "GET",
+	})
+	.then(function(response) {
+		$scope.loading = false;
+		$scope.BindGrid = [];
+		for (var i = 0; i < response.data.length; i++) {
+			$scope.AllProducts.push({"ID":response.data[i].ID ,"Name":response.data[i].Name, "Description":response.data[i].Description, "Price":response.data[i].Price,"InStock":response.data[i].InStock,"Category":response.data[i].CategoryName,"PhotoURL":response.data[i].PhotoURL});
+		}
+		$scope.DispalyProducts = angular.copy($scope.AllProducts);
+	});
 
-	$scope.DispalyProducts = angular.copy($scope.AllProducts);
-
-	$scope.Categories = [{"Name":'Sweet',"IsSelected":true},{"Name":'Farsan',"IsSelected":true}];
+	$http({
+		url: window.location.origin+'/ServerPHP/Client/GetAllCategories.php',
+		method: "GET",
+	})
+	.then(function(response) {
+		for (var i = 0; i < response.data.length; i++) {
+			$scope.Categories.push({"Name":response.data[i].Name,"IsSelected":true});
+		}
+	});
 
 	$scope.AddToCart = function(productName, Quantity){
 		for (var i = 0; i <$scope.CartProducts.length; i++) {
@@ -51,4 +60,4 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 			if(SelectedCat.indexOf($scope.AllProducts[i].Category) > -1) $scope.DispalyProducts.push($scope.AllProducts[i]);
 		}
 	};
- }]);
+}]);

@@ -87,14 +87,14 @@
 </style>
 
 <script type="text/javascript" src="../scripts/angular.min.js"></script>
-<script type="text/javascript" src="../scripts/Product_Model.js"></script>
+<script type="text/javascript" src="../scripts/Category_Model.js"></script>
 <script type="text/javascript" src="../scripts/AngularGrid_Utility.js"></script>
-<script type="text/javascript" src="../scripts/Aproducts.js"></script>
+<script type="text/javascript" src="../scripts/Acategories.js"></script>
 
 </head>
 
 <body>
-  <div ng-app="RanaSweetsApp" ng-controller="productController">
+  <div ng-app="RanaSweetsApp" ng-controller="categoryController">
     <!-- Page Content -->
     <div class="container" >
       <div class="row">
@@ -106,7 +106,7 @@
         </select> entries
       </div>
       <div class="col-lg-6" style="text-align: right;">
-      <button id="myBtn" class="btn btn-success btn-md" ng-click="InitAddNewProduct()">+ Add New Product</button>
+      <button id="myBtn" class="btn btn-success btn-md" ng-click="InitAddNewCategory()">+ Add New Product</button>
         <input type="text" placeholder="Search" ng-model="search">
       </div>
     </div>
@@ -125,26 +125,6 @@
               <th>
                 <a style=" cursor: pointer" ng-click="sortBy('Name')">Name</a>
                 <span class="sortorder" ng-show="propertyName === 'Name'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Price')">Price</a>
-                <span class="sortorder" ng-show="propertyName === 'Price'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Description')">Description</a>
-                <span class="sortorder" ng-show="propertyName === 'Description'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Category')">Category</a>
-                <span class="sortorder" ng-show="propertyName === 'Category'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('InStock')">InStock</a>
-                <span class="sortorder" ng-show="propertyName === 'InStock'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('PhotoURL')">PhotoURL</a>
-                <span class="sortorder" ng-show="propertyName === 'PhotoURL'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
                 <a style=" cursor: pointer" ng-click="sortBy('IsActive')">IsActive</a>
@@ -167,18 +147,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="singleProduct in BindGrid | orderBy:propertyName:reverse | filter : search">
-              <td>{{singleProduct.Name}}</td>
-              <td>{{singleProduct.Price}}</td>
-              <td>{{singleProduct.Description}}</td>
-              <td>{{singleProduct.Category}}</td>
-              <td>{{singleProduct.InStock?'YES':'NO'}}</td>
-              <td>{{singleProduct.PhotoURL}}</td>
-              <td>{{singleProduct.IsActive?'YES':'NO'}}</td>
-              <td>{{singleProduct.CreatedOn}}</td>
-              <td>{{singleProduct.LastUpdatedOn}}</td>
-              <td><button class="btn btn-primary" ng-click='InitEditNewProduct(singleProduct)'>  &#9998;</button></td>
-              <td><button class="btn btn-danger" ng-click='DeleteProduct(singleProduct.Name,singleProduct.ID)'> X </button></td>
+            <tr ng-repeat="singleCategory in BindGrid | orderBy:propertyName:reverse | filter : search">
+              <td>{{singleCategory.Name}}</td>
+              <td>{{singleCategory.IsActive==1?'YES':'NO'}}</td>
+              <td>{{singleCategory.CreatedOn}}</td>
+              <td>{{singleCategory.LastUpdatedOn}}</td>
+              <td><button class="btn btn-primary" ng-click='InitEditNewCategory(singleCategory)'>  &#9998;</button></td>
+              <td><button class="btn btn-danger" ng-click='DeleteCategory(singleCategory.Name,singleCategory.ID)'> X </button></td>
             </tr>
           </tbody>
         </table>
@@ -218,36 +193,12 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              Name : 
-              <span ng-if="AlterProduct.ID!=''">
-                {{AlterProduct.Name}}
-              </span>
-              <span ng-if="AlterProduct.ID=='' || AlterProduct.ID==null || AlterProduct.ID=='undefined'">
-                <input type="text" ng-model="AlterProduct.Name">
-              </span>
-            </div>
-            <div class="col-md-6">
-              Price : <input type="text" ng-model="AlterProduct.Price">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              Description : <input type="text" ng-model="AlterProduct.Description">
-            </div>
-            <div class="col-md-6">
-              Category : <select ng-model="AlterProduct.Category" ng-options="x for x in Categories"></select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              In Stock:
-              <input type="radio" ng-model="AlterProduct.InStock" value="1">YES
-              <input type="radio" ng-model="AlterProduct.InStock" value="0">NO
+              Name : <input type="text" ng-model="AlterCategory.Name">
             </div>
             <div class="col-md-6">
               In Active:
-              <input type="radio" ng-model="AlterProduct.IsActive" value="1">YES
-              <input type="radio" ng-model="AlterProduct.IsActive" value="0">NO
+              <input type="radio" ng-model="AlterCategory.IsActive" value="1">YES
+              <input type="radio" ng-model="AlterCategory.IsActive" value="0">NO
             </div>
           </div>
           <div class="row">

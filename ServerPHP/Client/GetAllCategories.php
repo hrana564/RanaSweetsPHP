@@ -1,8 +1,8 @@
 <?php
 
 require_once '../Utils/DBConfig.php';
-
-$sql = "SELECT Name FROM Categories where IsActive=true";
+parse_str($_SERVER['QUERY_STRING']);
+$sql = "Select * from Categories where IsActive=True";
 $data = array();
 
 $result = $conn->query($sql);
@@ -13,7 +13,7 @@ if ($result->num_rows > 0) {
         $data[] = $row;
     }
 } else {
-    echo "0 results";
+    echo "[]";
 }
 echo json_encode($data);
 $conn->close();

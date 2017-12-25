@@ -1,8 +1,8 @@
 <?php
 
 require_once '../Utils/DBConfig.php';
-
-$sql = "SELECT Name FROM Categories";
+parse_str($_SERVER['QUERY_STRING']);
+$sql = "Call A_GetAllCategories ($PageIndex,$PageSize)";
 $data = array();
 
 $result = $conn->query($sql);
