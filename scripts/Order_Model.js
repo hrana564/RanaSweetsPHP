@@ -9,6 +9,7 @@ function RSOrder() {
     this.DiscountPercentage = "",
     this.FinalCost = "",
     this.FinalCartProducts = [],
+    this.OrderProductCount = "",
     this.IsDelivered = "",
     this.IsActive = "",
     this.CreatedOn = "",

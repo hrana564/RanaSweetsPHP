@@ -83,6 +83,9 @@
     text-decoration: none;
     cursor: pointer;
   }
+  a.hovera span.hoverspan {display: none; position: absolute; color: #fff; background: #000; padding: 5px;}
+  a.hovera {position: relative;}
+  a.hovera:hover span.hoverspan {display: block; text-align: center;z-index: 1055}
 
 </style>
 
@@ -119,7 +122,7 @@
     </div>
     <div class="row" ng-show="!loading">
       <div class="col-lg-12">
-        <table class="table table-responsive table-bordered">
+        <table class="table table-bordered">
           <thead>
             <tr>
               <th>
@@ -127,39 +130,35 @@
                 <span class="sortorder" ng-show="propertyName === 'Name'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Price')">Price</a>
-                <span class="sortorder" ng-show="propertyName === 'Price'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('Mobile')">Mobile</a>
+                <span class="sortorder" ng-show="propertyName === 'Mobile'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Description')">Description</a>
-                <span class="sortorder" ng-show="propertyName === 'Description'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('Email')">Email</a>
+                <span class="sortorder" ng-show="propertyName === 'Email'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Category')">Category</a>
-                <span class="sortorder" ng-show="propertyName === 'Category'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('DateOfDelivery')">Date Of Delivery</a>
+                <span class="sortorder" ng-show="propertyName === 'DateOfDelivery'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('InStock')">InStock</a>
-                <span class="sortorder" ng-show="propertyName === 'InStock'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('Address')">Address</a>
+                <span class="sortorder" ng-show="propertyName === 'Address'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('PhotoURL')">PhotoURL</a>
-                <span class="sortorder" ng-show="propertyName === 'PhotoURL'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('FinalCost')">Final Cost</a>
+                <span class="sortorder" ng-show="propertyName === 'FinalCost'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('Category')">Category</a>
-                <span class="sortorder" ng-show="propertyName === 'Category'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('OrderProductCount')">Order Product Count</a>
+                <span class="sortorder" ng-show="propertyName === 'OrderProductCount'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('InStock')">InStock</a>
-                <span class="sortorder" ng-show="propertyName === 'InStock'" ng-class="{reverse: reverse}"></span>
+                <a style=" cursor: pointer" ng-click="sortBy('IsDelivered')">Is Delivered</a>
+                <span class="sortorder" ng-show="propertyName === 'IsDelivered'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
-                <a style=" cursor: pointer" ng-click="sortBy('PhotoURL')">PhotoURL</a>
-                <span class="sortorder" ng-show="propertyName === 'PhotoURL'" ng-class="{reverse: reverse}"></span>
-              </th>
-              <th>
-                <a style=" cursor: pointer" ng-click="sortBy('IsActive')">IsActive</a>
+                <a style=" cursor: pointer" ng-click="sortBy('IsActive')">Is Active</a>
                 <span class="sortorder" ng-show="propertyName === 'IsActive'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
@@ -181,11 +180,13 @@
           <tbody>
             <tr ng-repeat="singleProduct in BindGrid | orderBy:propertyName:reverse | filter : search">
               <td>{{singleProduct.Name}}</td>
-              <td>{{singleProduct.Price}}</td>
-              <td>{{singleProduct.Description}}</td>
-              <td>{{singleProduct.Category}}</td>
-              <td>{{singleProduct.InStock?'YES':'NO'}}</td>
-              <td>{{singleProduct.PhotoURL}}</td>
+              <td>{{singleProduct.Mobile}}</td>
+              <td>{{singleProduct.Email}}</td>
+              <td>{{singleProduct.DateOfDelivery}}</td>
+              <td><a href="#" class="hovera">View<span class="hoverspan" style="width: 300px;z-index: 5555">{{singleProduct.Address}}</span></a></td>
+              <td><a href="#" class="hovera">{{singleProduct.FinalCost}}<span class="hoverspan" style="width: 100px;z-index: 5555">{{singleProduct.TotalCost}}<br />-{{(singleProduct.DiscountPercentage/100) * singleProduct.TotalCost}}</span></a></td>
+              <td>{{singleProduct.OrderProductCount}}</td>
+              <td>{{singleProduct.IsDelivered?'YES':'NO'}}</td>
               <td>{{singleProduct.IsActive?'YES':'NO'}}</td>
               <td>{{singleProduct.CreatedOn}}</td>
               <td>{{singleProduct.LastUpdatedOn}}</td>
