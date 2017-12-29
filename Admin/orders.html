@@ -63,7 +63,7 @@
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 30px 10% 11% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
@@ -109,7 +109,6 @@
         </select> entries
       </div>
       <div class="col-lg-6" style="text-align: right;">
-      <button id="myBtn" class="btn btn-success btn-md" ng-click="InitAddNewProduct()">+ Add New Product</button>
         <input type="text" placeholder="Search" ng-model="search">
       </div>
     </div>
@@ -158,6 +157,10 @@
                 <span class="sortorder" ng-show="propertyName === 'IsDelivered'" ng-class="{reverse: reverse}"></span>
               </th>
               <th>
+                <a style=" cursor: pointer" ng-click="sortBy('Comments')">Comments</a>
+                <span class="sortorder" ng-show="propertyName === 'Comments'" ng-class="{reverse: reverse}"></span>
+              </th>
+              <th>
                 <a style=" cursor: pointer" ng-click="sortBy('IsActive')">Is Active</a>
                 <span class="sortorder" ng-show="propertyName === 'IsActive'" ng-class="{reverse: reverse}"></span>
               </th>
@@ -178,20 +181,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="singleProduct in BindGrid | orderBy:propertyName:reverse | filter : search">
-              <td>{{singleProduct.Name}}</td>
-              <td>{{singleProduct.Mobile}}</td>
-              <td>{{singleProduct.Email}}</td>
-              <td>{{singleProduct.DateOfDelivery}}</td>
-              <td><a href="#" class="hovera">View<span class="hoverspan" style="width: 300px;z-index: 5555">{{singleProduct.Address}}</span></a></td>
-              <td><a href="#" class="hovera">{{singleProduct.FinalCost}}<span class="hoverspan" style="width: 100px;z-index: 5555">{{singleProduct.TotalCost}}<br />-{{(singleProduct.DiscountPercentage/100) * singleProduct.TotalCost}}</span></a></td>
-              <td>{{singleProduct.OrderProductCount}}</td>
-              <td>{{singleProduct.IsDelivered?'YES':'NO'}}</td>
-              <td>{{singleProduct.IsActive?'YES':'NO'}}</td>
-              <td>{{singleProduct.CreatedOn}}</td>
-              <td>{{singleProduct.LastUpdatedOn}}</td>
-              <td><button class="btn btn-primary" ng-click='InitEditNewProduct(singleProduct)'>  &#9998;</button></td>
-              <td><button class="btn btn-danger" ng-click='DeleteProduct(singleProduct.Name,singleProduct.ID)'> X </button></td>
+            <tr ng-repeat="singleOrder in BindGrid | orderBy:propertyName:reverse | filter : search">
+              <td>{{singleOrder.Name}}</td>
+              <td>{{singleOrder.Mobile}}</td>
+              <td>{{singleOrder.Email}}</td>
+              <td>{{singleOrder.DateOfDelivery}}</td>
+              <td><a href="#" class="hovera">View<span class="hoverspan" style="width: 300px;z-index: 5555">{{singleOrder.Address}}</span></a></td>
+              <td><a href="#" class="hovera">{{singleOrder.FinalCost}}<span class="hoverspan" style="width: 100px;z-index: 5555">{{singleOrder.TotalCost}}<br />-{{(singleOrder.DiscountPercentage/100) * singleOrder.TotalCost}}</span></a></td>
+              <td>{{singleOrder.OrderProductCount}}</td>
+              <td>{{singleOrder.IsDelivered?'YES':'NO'}}</td>
+              <td>{{singleOrder.Comments}}</td>
+              <td>{{singleOrder.IsActive?'YES':'NO'}}</td>
+              <td>{{singleOrder.CreatedOn}}</td>
+              <td>{{singleOrder.LastUpdatedOn}}</td>
+              <td><button class="btn btn-primary" ng-click='InitEditNewProduct(singleOrder)'>  &#9998;</button></td>
+              <td><button class="btn btn-danger" ng-click='DeleteOrder(singleOrder.Name,singleOrder.ID)'> X </button></td>
             </tr>
           </tbody>
         </table>
@@ -231,43 +235,86 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              Name : 
-              <span ng-if="AlterProduct.ID!=''">
-                {{AlterProduct.Name}}
-              </span>
-              <span ng-if="AlterProduct.ID=='' || AlterProduct.ID==null || AlterProduct.ID=='undefined'">
-                <input type="text" ng-model="AlterProduct.Name">
-              </span>
+              Name : <input type="text" ng-model="AlterProduct.Name">
             </div>
             <div class="col-md-6">
-              Price : <input type="text" ng-model="AlterProduct.Price">
+              Mobile : <input type="text" ng-model="AlterProduct.Mobile">
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
-              Description : <input type="text" ng-model="AlterProduct.Description">
+              Email : <input type="text" ng-model="AlterProduct.Email">
             </div>
             <div class="col-md-6">
-              Category : <select ng-model="AlterProduct.Category" ng-options="x for x in Categories"></select>
+              Delivery Date : 
+              <select ng-model="AlterProduct.DateOfDelivery">
+                <option ng-repeat="singleDate in DeliveryDates" value="{{singleDate.value}}">{{singleDate.text}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              Total Cost : <input type="text" ng-model="AlterProduct.TotalCost" ng-change="TotalCostChange()">
+            </div>
+            <div class="col-md-4">
+              Discount Percentage : <input type="text" ng-model="AlterProduct.DiscountPercentage" ng-change="DiscountPercentChange()">
+            </div>
+            <div class="col-md-4">
+              Final Cost : <input type="text" ng-model="AlterProduct.FinalCost" ng-change="FinalCostChange()">
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
-              In Stock:
-              <input type="radio" ng-model="AlterProduct.InStock" value="1">YES
-              <input type="radio" ng-model="AlterProduct.InStock" value="0">NO
+              Address : <textarea ng-model="AlterProduct.Address" rows="3" cols="50"></textarea>
+            </div>
+            <div class="col-md-6">
+              Comments : <textarea ng-model="AlterProduct.Comments" rows="3" cols="50"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              IsDelivered : 
+              <input type="radio" ng-model="AlterProduct.IsDelivered" value="1">YES
+              <input type="radio" ng-model="AlterProduct.IsDelivered" value="0">NO
             </div>
             <div class="col-md-6">
               In Active:
               <input type="radio" ng-model="AlterProduct.IsActive" value="1">YES
               <input type="radio" ng-model="AlterProduct.IsActive" value="0">NO
             </div>
+          </div><br />
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-bordered">
+                <thead>
+                  <tr> 
+                    <td>Product Name</td>
+                    <td>QTY Ordered</td>
+                    <td>Price Per KG</td>
+                    <td>Total Cost</td>
+                    <td>Created On</td>
+                    <td>Last Updated On</td>
+                    <td>Delete</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="singleSubProduct in AlterProduct.FinalCartProducts">
+                    <td>{{singleSubProduct.Name}}</td>
+                    <td><input ng-model="singleSubProduct.Quantity" ng-change="SubProductQuantityChange(singleSubProduct.Name)"></td>
+                    <td><input ng-model="singleSubProduct.PricePerKG" ng-change="SubProductPriceChange(singleSubProduct.Name)"></td>
+                    <td><input ng-model="singleSubProduct.TotalCost" ng-change="SubProductTotalCostChange(singleSubProduct.Name)"></td>
+                    <td>{{singleSubProduct.CreatedOn}}</td>
+                    <td>{{singleSubProduct.LastUpdatedOn}}</td>
+                    <td><button class="btn btn-danger btn-sm" ng-click="DeleteSubProduct(singleSubProduct.Name)">Delete</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">
-              <button class="btn btn-danger btn-sm" ng-click="ModalSave()">Save</button>
+              <button class="btn btn-success btn-sm" ng-click="ModalSave()">Save</button>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -277,16 +324,8 @@
   // Get the modal
 var modal = document.getElementById('myModal');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {

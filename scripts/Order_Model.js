@@ -11,6 +11,7 @@ function RSOrder() {
     this.FinalCartProducts = [],
     this.OrderProductCount = "",
     this.IsDelivered = "",
+    this.Comments = "",
     this.IsActive = "",
     this.CreatedOn = "",
     this.LastUpdatedOn = ""

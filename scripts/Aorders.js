@@ -1,3 +1,8 @@
+Date.prototype.addDays = function(days) {
+    this.setDate(this.getDate() + parseInt(days));
+    return this;
+};
+
 var app = angular.module("RanaSweetsApp", []); 
 
 app.controller('orderController', ['$http','$scope','UtilityObject', function($http,$scope,Utility){
@@ -24,9 +29,17 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
  $scope.currentPage = 1;
  $scope.PagingMessage = "";
 
- $scope.AlterProduct = new RSOrder();
+ var currentDate = new Date();
+ currentDate.addDays(-30);
+ $scope.DeliveryDates = [];
+ for (var i = 0; i < 60; i++) {
+    var tmpDate = currentDate.addDays(1);
+    $scope.DeliveryDates.push({"text":tmpDate.toDateString(),"value":tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate()});
+}
 
- function Error(Message) {
+$scope.AlterProduct = new RSOrder();
+
+function Error(Message) {
     alert(Message);
 }
 
@@ -41,6 +54,7 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
             $scope.loading = false;
             $scope.BindGrid = [];
             for (var i = 0; i < response.data.length; i++) {
+                console.log(response.data[i].DateOfDelivery);
                 $scope.BindGrid.push({"ID":response.data[i].ID ,
                     "Name":response.data[i].Name, 
                     "Mobile":response.data[i].Mobile, 
@@ -53,6 +67,7 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
                     "FinalCartProducts":JSON.parse(response.data[i].SubOrderProducts),
                     "OrderProductCount":(JSON.parse(response.data[i].SubOrderProducts)).length,
                     "IsDelivered":response.data[i].IsDelivered,
+                    "Comments":response.data[i].Comments,
                     "IsActive":response.data[i].IsActive,
                     "CreatedOn":response.data[i].CreatedOn,
                     "LastUpdatedOn":response.data[i].LastUpdatedOn});
@@ -81,29 +96,30 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
         $scope.currentPage = this.n;
     };
 
-    $scope.DeleteProduct = function (productName,productID) {
-        if(confirm('Are you sure you want to delete '+productName+ ' ?')){
+    $scope.DeleteOrder = function (orderID) {
+        if(confirm('Are you sure you want to delete this Order?')){
             $http({
-                url: window.location.origin+'/ServerPHP/Admin/DeleteProducts.php',
+                url: window.location.origin+'/ServerPHP/Admin/DeleteOrders.php',
                 method: "POST",
                 headers: {
                   'Content-Type': 'multipart/form-data'
               },
-              data:{"ID":productID}
+              data:{"ID":orderID}
           })
             .then(function(response) {
                 if(response.data[0].Result=="True"){
-                    alert('Product Deleted Successfully!');
+                    alert('Order Deleted Successfully!');
                     $scope.loadGrid(1);
                 } else {
-                    alert('Product Deletion Failed!');
+                    alert('Order Deletion Failed!');
                 }
             });
         }
     };
 
-    $scope.InitAddNewProduct =function () {
-        $scope.AlterProduct = new RSOrder();
+    $scope.InitEditNewProduct =function (currentProduct) {
+        $scope.AlterProduct = angular.copy(currentProduct);
+        console.log($scope.AlterProduct);
     // Get the modal
     var modal = document.getElementById('myModal');
     // Get the button that opens the modal
@@ -111,14 +127,51 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
     modal.style.display = "block";
 };
 
-$scope.InitEditNewProduct =function (currentProduct) {
-    $scope.AlterProduct = angular.copy(currentProduct);
-    // Get the modal
-    var modal = document.getElementById('myModal');
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-    modal.style.display = "block";
+$scope.UpdateSubProductsCosts = function () {
+    var TotalCost = 0;
+    for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+        TotalCost += Number($scope.AlterProduct.FinalCartProducts[i].TotalCost);
+    }
+    $scope.AlterProduct.TotalCost = Math.round(TotalCost);
+    $scope.TotalCostChange();
 };
+
+$scope.SubProductQuantityChange= function (productName) {
+    for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+        if($scope.AlterProduct.FinalCartProducts[i].Name==productName){
+            $scope.AlterProduct.FinalCartProducts[i].TotalCost = Math.round($scope.AlterProduct.FinalCartProducts[i].Quantity * $scope.AlterProduct.FinalCartProducts[i].PricePerKG);
+        }
+    }
+    $scope.UpdateSubProductsCosts();
+}
+
+$scope.SubProductPriceChange= function (productName) {
+    for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+        if($scope.AlterProduct.FinalCartProducts[i].Name==productName){
+            $scope.AlterProduct.FinalCartProducts[i].TotalCost = Math.round($scope.AlterProduct.FinalCartProducts[i].Quantity * $scope.AlterProduct.FinalCartProducts[i].PricePerKG);
+        }
+    }
+    $scope.UpdateSubProductsCosts();
+}
+
+$scope.SubProductTotalCostChange= function (productName) {
+    for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+        if($scope.AlterProduct.FinalCartProducts[i].Name==productName){
+            $scope.AlterProduct.FinalCartProducts[i].PricePerKG = Math.round($scope.AlterProduct.FinalCartProducts[i].TotalCost / $scope.AlterProduct.FinalCartProducts[i].Quantity);
+        }
+    }
+    $scope.UpdateSubProductsCosts();
+}
+
+$scope.DeleteSubProduct = function (productName) {
+    for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+        if ($scope.AlterProduct.FinalCartProducts[i].Name == productName){
+            $scope.AlterProduct.FinalCartProducts.splice(i,1);
+            break;
+        }
+    }
+    $scope.UpdateSubProductsCosts();
+}
 
 $scope.ModalSave = function () {
     $http({
@@ -140,6 +193,17 @@ $scope.ModalSave = function () {
         }
     });
 }
+$scope.TotalCostChange = function () {
+    $scope.AlterProduct.FinalCost = Math.round($scope.AlterProduct.TotalCost * (1-($scope.AlterProduct.DiscountPercentage / 100)));
+};
+
+$scope.DiscountPercentChange = function () {
+   $scope.AlterProduct.FinalCost = Math.round($scope.AlterProduct.TotalCost * (1-($scope.AlterProduct.DiscountPercentage / 100)));
+};
+
+$scope.FinalCostChange = function () {
+    $scope.AlterProduct.DiscountPercentage = Math.round(100 - (($scope.AlterProduct.FinalCost / $scope.AlterProduct.TotalCost) * 100));
+};
 
 }]);
 app.service("UtilityObject", Utility);
