@@ -12,6 +12,7 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 	};
 
 	$scope.Categories = [];
+	$scope.loading = true;
 	$scope.CartProducts = typeof localStorage.getItem('RanaSweetsCart') == "string" &&  localStorage.getItem('RanaSweetsCart') != "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
 
 	$scope.AllProducts = [];
@@ -23,6 +24,12 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 		$scope.loading = false;
 		$scope.BindGrid = [];
 		for (var i = 0; i < response.data.length; i++) {
+			console.log(response.data[i].PhotoURL);
+            if(response.data[i].PhotoURL=="" || response.data[i].PhotoURL== null || response.data[i].PhotoURL=="undefined" || response.data[i].PhotoURL==undefined){
+				response.data[i].PhotoURL = "default.png";
+            } else {
+                
+            }
 			$scope.AllProducts.push({"ID":response.data[i].ID ,"Name":response.data[i].Name, "Description":response.data[i].Description, "Price":response.data[i].Price,"InStock":response.data[i].InStock,"Category":response.data[i].CategoryName,"PhotoURL":response.data[i].PhotoURL});
 		}
 		$scope.DispalyProducts = angular.copy($scope.AllProducts);

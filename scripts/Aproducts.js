@@ -41,6 +41,10 @@ app.controller('productController', ['$http','$scope','UtilityObject', function(
             $scope.loading = false;
             $scope.BindGrid = [];
             for (var i = 0; i < response.data.length; i++) {
+                console.log(response.data[i].PhotoURL);
+                if(!(response.data[i].PhotoURL=="" || response.data[i].PhotoURL== null || response.data[i].PhotoURL=="undefined")){
+                    response.data[i].PhotoURL = "default.png";
+                }
                 $scope.BindGrid.push({"ID":response.data[i].ID ,"Name":response.data[i].Name, "Description":response.data[i].Description, "Price":response.data[i].Price,"InStock":response.data[i].InStock,"Category":response.data[i].CategoryName,"PhotoURL":response.data[i].PhotoURL,"IsActive":response.data[i].IsActive,"CreatedOn":response.data[i].CreatedOn,"LastUpdatedOn":response.data[i].LastUpdatedOn});
             }
             $scope.VirtualItemCount = response.data[0].VirtualItemCount;

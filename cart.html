@@ -43,7 +43,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
+              <a class="nav-link" href="/index.html">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
@@ -65,8 +65,18 @@
       <div class="row">
         <div class="col-lg-8">
          <br />
-          <div class="row">
-             <table class="table table-bordered table-hover table-condensed">
+          <div class="row" ng-show="loading">
+            <div class="col-lg-12">
+              <div style="text-align: center;">
+                <IMG SRC="../images/loading.gif" ALT="loading..." style="width: 50px; height: 50px;margin-top: 100px" >
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-show="!loading">
+            <div ng-if="FinalCartProducts.length == 0">
+            Sorry you have no products in your cart!!!
+            </div>
+             <table class="table table-bordered table-hover table-condensed" ng-if="FinalCartProducts.length != 0">
               <thead>
                 <tr style="background-color: #00BFFF">
                   <th>Product</th>
@@ -90,15 +100,21 @@
         <div class="col-lg-4"> &nbsp;
           <div style="vertical-align: middle;">
              <h3>Checkout</h3>
-             Total Price &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : {{FinalCartProducts.reduce(add, 0)}}<br />
-             Discount &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 10%
-             <hr>
-             Final Amount : {{FinalCartProducts.reduce(add, 0) * 0.9}}<br />
-             Name : <input type="text" ng-model="PlaceOrder.Name"> <br /><br />
-             Mobile : <input type="text" ng-model="PlaceOrder.Mobile"> <br /><br />
+             <span ng-if="PlaceOrder.DiscountPercentage>0">
+               Total Price &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : {{FinalCartProducts.reduce(add, 0)}}<br />
+               Discount &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{PlaceOrder.DiscountPercentage}}%
+               <hr>
+             </span>
+             Final Amount : {{FinalCartProducts.reduce(add, 0) * (1-(PlaceOrder.DiscountPercentage/100))}}<br />
+             Name<span style="color: red;">*</span> : <input type="text" ng-model="PlaceOrder.Name"> <br /><br />
+             Mobile<span style="color: red;">*</span> : <input type="text" ng-model="PlaceOrder.Mobile"> <br /><br />
              Email : <input type="text" ng-model="PlaceOrder.Email"> <br /><br />
-             Delivery Date : <select ng-model="selectedDate" ng-options="singleDate for singleDate in DeliveryDates"></select> <br/><br/>
-             Address : <textarea ng-model="PlaceOrder.Address"></textarea> <br /><br />
+             Delivery Date<span style="color: red;">*</span> :
+              <select ng-model="PlaceOrder.DateOfDelivery">
+                <option ng-repeat="singleDate in DeliveryDates" value="{{singleDate.value}}">{{singleDate.text}}</option>
+              </select>
+              <br/><br/>
+             Address<span style="color: red;">*</span> : <textarea ng-model="PlaceOrder.Address"></textarea> <br /><br />
              <button class="btn btn-success" ng-click="PlaceOrderFinal()">Place Order</button><br /><br />
           </div>
         </div>

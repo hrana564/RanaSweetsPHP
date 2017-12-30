@@ -173,7 +173,7 @@
               <td>{{singleProduct.Description}}</td>
               <td>{{singleProduct.Category}}</td>
               <td>{{singleProduct.InStock?'YES':'NO'}}</td>
-              <td>{{singleProduct.PhotoURL}}</td>
+              <td><a href="/ServerPHP/Admin/ProductImage.php?OrderID={{singleProduct.ID}}" target="_blank">View</a></td>
               <td>{{singleProduct.IsActive?'YES':'NO'}}</td>
               <td>{{singleProduct.CreatedOn}}</td>
               <td>{{singleProduct.LastUpdatedOn}}</td>

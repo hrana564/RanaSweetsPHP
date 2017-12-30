@@ -28,6 +28,8 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
  $scope.PageSize = 10;
  $scope.currentPage = 1;
  $scope.PagingMessage = "";
+ $scope.AJAXTotalRequests = 0;
+ $scope.AJAXCompletedRequests = 0;
 
  var currentDate = new Date();
  currentDate.addDays(-30);
@@ -54,7 +56,6 @@ function Error(Message) {
             $scope.loading = false;
             $scope.BindGrid = [];
             for (var i = 0; i < response.data.length; i++) {
-                console.log(response.data[i].DateOfDelivery);
                 $scope.BindGrid.push({"ID":response.data[i].ID ,
                     "Name":response.data[i].Name, 
                     "Mobile":response.data[i].Mobile, 
@@ -119,12 +120,54 @@ function Error(Message) {
 
     $scope.InitEditNewProduct =function (currentProduct) {
         $scope.AlterProduct = angular.copy(currentProduct);
-        console.log($scope.AlterProduct);
     // Get the modal
     var modal = document.getElementById('myModal');
     // Get the button that opens the modal
     var btn = document.getElementById("myBtn");
     modal.style.display = "block";
+};
+
+$scope.UpdateOrder = function () {
+    $scope.AJAXTotalRequests = $scope.AlterProduct.FinalCartProducts.length;
+    $scope.AJAXCompletedRequests = 0;
+    $http({
+        url: window.location.origin+'/ServerPHP/Admin/UpdateOrders.php',
+        method: "POST",
+        headers: {
+          'Content-Type': 'multipart/form-data'
+      },
+      data:$scope.AlterProduct
+  })
+    .then(function(response) {
+        if(response.data[0].Result=="True"){
+            for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+                $http({
+                    url: window.location.origin+'/ServerPHP/Admin/UpdateSubOrders.php',
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                  },
+                  data:$scope.AlterProduct.FinalCartProducts[i]
+              }).then(function (response) {
+                $scope.AJAXCompletedRequests++;
+                if($scope.AJAXTotalRequests == $scope.AJAXCompletedRequests){
+                    $scope.loadGrid(1);
+                }
+                if(response.data[0].Result=="True"){
+
+                } else {
+                    alert('Order-SubProduct Updation Failed! Contact Admin immediately.');
+                }
+            });
+          }
+          alert('Data Updated Successfully!');
+          $scope.loadGrid(1);
+          $scope.AlterProduct = new RSOrder();
+          document.getElementById('myModal').style.display = "none";
+      } else {
+        alert('Data Updation Failed!');
+    }
+});
 };
 
 $scope.UpdateSubProductsCosts = function () {
@@ -198,7 +241,7 @@ $scope.TotalCostChange = function () {
 };
 
 $scope.DiscountPercentChange = function () {
-   $scope.AlterProduct.FinalCost = Math.round($scope.AlterProduct.TotalCost * (1-($scope.AlterProduct.DiscountPercentage / 100)));
+ $scope.AlterProduct.FinalCost = Math.round($scope.AlterProduct.TotalCost * (1-($scope.AlterProduct.DiscountPercentage / 100)));
 };
 
 $scope.FinalCostChange = function () {

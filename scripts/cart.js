@@ -11,6 +11,18 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 	$scope.FinalCartProducts = [];
 	$scope.AllProducts = [];
 	$scope.TempCartProducts = [];
+	$scope.loading = true;
+	$scope.DiscountPercentage = 10;
+	$scope.PlaceOrder={
+		"Name":"",
+		"Mobile":"",
+		"Email":"",
+		"DateOfDelivery":"",
+		"Address":"",
+		"TotalCost":0,
+		"DiscountPercentage":$scope.DiscountPercentage,
+		"FinalCost":0
+	}
 
 	$http({
 		url: window.location.origin+'/ServerPHP/Client/GetAllProducts.php',
@@ -58,25 +70,67 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 	var currentDate = new Date();
 	$scope.DeliveryDates = [];
 	for (var i = 0; i < 30; i++) {
-		$scope.DeliveryDates.push(currentDate.addDays(1).toDateString());
-		if(i==0) $scope.selectedDate = currentDate.toDateString();
-	}
-	$scope.PlaceOrder={
-		"Name":"",
-		"Mobile":"",
-		"Email":"",
-		"DateOfDelivery":"",
-		"Address":""
+		var tmpDate = currentDate.addDays(1);
+		$scope.DeliveryDates.push({"text":tmpDate.toDateString(),"value":tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate()});
+		if(i==0) $scope.PlaceOrder.DateOfDelivery = tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate();
 	}
 	$scope.PlaceOrderFinal = function () {
-		console.log($scope.PlaceOrder);
-		console.log($scope.FinalCartProducts);
+		if($scope.FinalCartProducts,length==0){
+			alert('Your Cart is Empty. Please add products to your cart!')
+		}
+		if($scope.PlaceOrder.Name==""){
+			alert('Name is Mandatory. Please Enter your name!');
+			return;
+		}
+		if($scope.PlaceOrder.Name.length<3){
+			alert('Your name entered is invalid. Name should me more that 2 characters!');
+			return;
+		}
+		if($scope.PlaceOrder.Mobile==""){
+			alert('Mobile Number is Mandatory. Please Enter your Mobile Number!');
+			return;
+		}
+		if($scope.PlaceOrder.Mobile.length != 10 || isNAN($scope.PlaceOrder.Mobile) == true){
+			alert('Invalid Mobile number detected. Mobile Number should be 10 digits only!');
+			return;
+		}
+		if($scope.PlaceOrder.Address==""){
+			alert('Delivery Address is Mandatory. Please Enter your Delivery Address!');
+			return;
+		}
+		if($scope.PlaceOrder.Address.length<10){
+			alert('Delivery Address Should be atleast 10 character long!');
+			return;
+		}
+		$scope.PlaceOrder.TotalCost = $scope.FinalCartProducts.reduce($scope.add, 0) ;
+		$scope.PlaceOrder.FinalCost = $scope.FinalCartProducts.reduce($scope.add, 0) * (1-($scope.PlaceOrder.DiscountPercentage/100)) ;
+
+		$http({
+            url: window.location.origin+'/ServerPHP/Client/PostOrder.php',
+            method: "POST",
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            data:{"OD":JSON.stringify($scope.PlaceOrder), "OC":JSON.stringify($scope.FinalCartProducts)}
+            })
+            .then(function(response) {
+                if(response.data[0].Result=="True"){
+                    alert('Thankyou! Order Placed Successfully. We will get in touch with you soon :)');
+                    $scope.loadGrid(1);
+                } else {
+                    alert('Error occoured while placing order! Call 9823625630 for support.');
+                }
+            });
+
 		$scope.PlaceOrder={
 			"Name":"",
 			"Mobile":"",
 			"Email":"",
 			"DateOfDelivery":"",
-			"Address":""
+			"Address":"",
+			"TotalCost":0,
+			"DiscountPercentage":$scope.DiscountPercentage,
+			"FinalCost":0
 		}
 		$scope.FinalCartProducts = [];
 		$scope.UpdateCartProduct();
