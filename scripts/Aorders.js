@@ -7,8 +7,16 @@ var app = angular.module("RanaSweetsApp", []);
 
 app.controller('orderController', ['$http','$scope','UtilityObject', function($http,$scope,Utility){
 
+    $scope.getQueryString = function ( field, url ) {
+        var href = url ? url : window.location.href;
+        var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+        var string = reg.exec(href);
+        return string ? string[1] : null;
+    };
     $scope.accessToken = "abcedfghijklmnopqrstuvwxyz";
     $scope.loading = false;
+    $scope.FilterMode = $scope.getQueryString("Mode");
+    $scope.FilterMode = $scope.FilterMode ? $scope.FilterMode : 1;
 
     $scope.Categories = [];
     $http({
@@ -49,7 +57,7 @@ function Error(Message) {
     $scope.loadGrid = function (Index) {
         $scope.loading = true;
         $http({
-            url: window.location.origin+'/ServerPHP/Admin/GetAllOrders.php?PageIndex='+Index+'&PageSize='+$scope.PageSize,
+            url: window.location.origin+'/ServerPHP/Admin/GetAllOrders.php?PageIndex='+Index+'&PageSize='+$scope.PageSize+'&Mode='+$scope.FilterMode,
             method: "GET",
         })
         .then(function(response) {
@@ -73,12 +81,15 @@ function Error(Message) {
                     "CreatedOn":response.data[i].CreatedOn,
                     "LastUpdatedOn":response.data[i].LastUpdatedOn});
             }
-            $scope.VirtualItemCount = response.data[0].VirtualItemCount;
-            $scope.PagingMessage = $scope.Utility.Paging(response.data[0].VirtualItemCount, $scope.PageSize, Index);
+            $scope.VirtualItemCount = response.data[0]?response.data[0].VirtualItemCount:0;
+            $scope.PagingMessage = $scope.Utility.Paging($scope.VirtualItemCount, $scope.PageSize, Index);
             $scope.currentPage = Index;
         });
     }
     $scope.loadGrid(1);
+    $scope.FilterChange = function () {
+        $scope.loadGrid(1);
+    }
 
     $scope.sortBy = function (propertyName) {
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;

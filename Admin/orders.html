@@ -10,7 +10,9 @@
 
   <title>Admin Panel</title>
   <!-- Bootstrap core CSS -->
-  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+    <link href="/css/shop-homepage.css" rel="stylesheet">
   <style type="text/css">
    .sortorder:after {
     content: '\25b2';
@@ -48,6 +50,7 @@
   }
   /* The Modal (background) */
   .modal {
+    padding-top: 56px;
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -96,19 +99,66 @@
 
 </head>
 
-<body>
-  <div ng-app="RanaSweetsApp" ng-controller="orderController">
+<body ng-app="RanaSweetsApp" ng-controller="orderController">
+<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <div style="overflow:auto; width: 80%">
+        <div style="float:left;">
+          <a class="navbar-brand" href="./index.html">Rana Sweets & Farsan - Admin Panel</a>
+        </div>
+          <!-- <div style="float:right;">
+            <a href="./cart.html" style="float: right;font-weight: bold;font-size: 30px;color: #B8860B;">{{CartProducts.length==0?'':CartProducts.length}}🛒</a>
+          </div> -->
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="dropdown">
+              <a href="#" class="nav-link" data-toggle="dropdown" style="width: 120%">Master &#8615;</a>
+              <ul class="dropdown-menu" style="background-color: #343a40!important">
+                <li ><a class="nav-link" href="./Categories.html">Categories</a></li>
+                <li ><a class="nav-link" href="./Products.html">Products</a></li>
+                <!-- <li ><a class="nav-link" href="./Others.html">Others</a></li> -->
+              </ul>
+            </li>
+            <li class="dropdown nav-item active"> 
+              <a href="#" class="nav-link" data-toggle="dropdown" style="width: 120%">Orders &#8615;</a>
+              <ul class="dropdown-menu" style="background-color: #343a40!important">
+                <li ><a class="nav-link" href="./Orders.html?Mode=1">All</a></li>
+                <li ><a class="nav-link" href="./Orders.html?Mode=2">Un Delivered</a></li>
+                <li ><a class="nav-link" href="./Orders.html?Mode=3">Danger</a></li>
+                <li ><a class="nav-link" href="./Orders.html?Mode=4">Delivered</a></li>
+                <!-- <li ><a class="nav-link" href="./Others.html">Others</a></li> -->
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <!-- Page Content -->
-    <div class="container" >
+    <div style="width: 100%; padding: 15px !important" >
+     <br />
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-3">
           Show <select ng-model="PageSize" ng-change="loadGrid(1)">
           <option ng-selected="true" ng-value="10">10</option>
           <option ng-value="20">20</option>
           <option ng-value="50">50</option>
         </select> entries
       </div>
-      <div class="col-lg-6" style="text-align: right;">
+      <div class="col-lg-6">
+        <input type="radio" ng-model="FilterMode" value="1" ng-change="FilterChange()">All &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" ng-model="FilterMode" value="2" ng-change="FilterChange()">Un Delivered &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" ng-model="FilterMode" value="3" ng-change="FilterChange()">Danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" ng-model="FilterMode" value="4" ng-change="FilterChange()">Delivered &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-3" style="text-align: right;">
         <input type="text" placeholder="Search" ng-model="search">
       </div>
     </div>
@@ -319,25 +369,34 @@
       </div>
     </div>
   </div>
-</div>
-<script type="text/javascript">
-  // Get the modal
-var modal = document.getElementById('myModal');
+  <!-- Bootstrap core JavaScript -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript">
+      $('.row').on('click',function(e){
+        if($(".navbar-collapse").attr("class").includes("show")){
+          e.preventDefault();  $(".navbar-toggler").click();
+        }
+      });
+    </script>
+  <script type="text/javascript">
+    // Get the modal
+  var modal = document.getElementById('myModal');
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+  </script>
 </body>
 </html>
