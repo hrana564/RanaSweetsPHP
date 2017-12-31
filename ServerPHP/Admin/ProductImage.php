@@ -3,17 +3,8 @@
 <body>
 	<?php
 
-	function generateRandomString($length = 10) {
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$charactersLength = strlen($characters);
-		$randomString = '';
-		for ($i = 0; $i < $length; $i++) {
-			$randomString .= $characters[rand(0, $charactersLength - 1)];
-		}
-		return $randomString;
-	}
-
 	require_once '../Utils/DBConfig.php';
+	require_once '../Utils/PHPFunctions.php';
 	parse_str($_SERVER['QUERY_STRING']);
 
 	$target_dir = $_SERVER['DOCUMENT_ROOT']."/images/Products/";

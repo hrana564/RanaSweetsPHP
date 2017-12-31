@@ -28,14 +28,21 @@ $scope.ValidateAndLogin = function () {
 		return;
 	}
       $http({
-                url: '/Admin',
+                url: window.location.origin+'/ServerPHP/Admin/Login.php',
                 method: "POST",
                 data: { 'userName':$scope.username, 'password':$scope.password}
             })
       .then(function(response) {
                 // success
-                $scope.accessToken = "abcedfghijklmnopqrstuvwxyz";
-              
+                if(response.data[0].AuthToken.length==100){
+                	localStorage.setItem('RanaSweetsAT', response.data[0].AuthToken);
+                	window.location = window.location.origin+'/Admin/orders.html?Mode=2';
+                } else {
+                	console.log(response);
+	                $scope.invalidUP = true;
+	                $scope.username = "";
+	                $scope.password = "";
+                }
             }).catch(function(response) { 
                 // failure
                 console.log(response);
@@ -44,6 +51,5 @@ $scope.ValidateAndLogin = function () {
                 $scope.password = "";
             });
     };
-
 }]);
 app.service("UtilityObject", Utility);
