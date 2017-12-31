@@ -13,10 +13,36 @@ app.controller('orderController', ['$http','$scope','UtilityObject', function($h
         var string = reg.exec(href);
         return string ? string[1] : null;
     };
-    $scope.accessToken = "abcedfghijklmnopqrstuvwxyz";
     $scope.loading = false;
     $scope.FilterMode = $scope.getQueryString("Mode");
     $scope.FilterMode = $scope.FilterMode ? $scope.FilterMode : 1;
+    $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+
+    if($scope.RanaSweetsAT.length == 100){
+        $http({
+                url: window.location.origin+'/ServerPHP/Admin/ValidateAuthToken.php',
+                method: "POST",
+                data: { 'Token':$scope.RanaSweetsAT}
+            })
+      .then(function(response) {
+                // success
+                if(response.data[0].Result=="True"){
+
+                } else {
+                    console.log(response);
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
+            }).catch(function(response) { 
+                // failure
+                console.log(response);
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            });
+        }else {
+            localStorage.setItem('RanaSweetsAT','');
+            window.location = window.location.origin+'/Admin/index.html';
+        }
 
     $scope.Categories = [];
     $http({
@@ -109,6 +135,7 @@ function Error(Message) {
     };
 
     $scope.DeleteOrder = function (orderID) {
+        $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
         if(confirm('Are you sure you want to delete this Order?')){
             $http({
                 url: window.location.origin+'/ServerPHP/Admin/DeleteOrders.php',
@@ -116,9 +143,13 @@ function Error(Message) {
                 headers: {
                   'Content-Type': 'multipart/form-data'
               },
-              data:{"ID":orderID}
+              data:{"ID":orderID,'Token':$scope.RanaSweetsAT}
           })
             .then(function(response) {
+                if(response.data[0].Result=="-1"){
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
                 if(response.data[0].Result=="True"){
                     alert('Order Deleted Successfully!');
                     $scope.loadGrid(1);
@@ -139,6 +170,8 @@ function Error(Message) {
 };
 
 $scope.UpdateOrder = function () {
+    $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+    $scope.AlterProduct.Token=$scope.RanaSweetsAT;
     $scope.AJAXTotalRequests = $scope.AlterProduct.FinalCartProducts.length;
     $scope.AJAXCompletedRequests = 0;
     $http({
@@ -150,7 +183,12 @@ $scope.UpdateOrder = function () {
       data:$scope.AlterProduct
   })
     .then(function(response) {
+        if(response.data[0].Result=="-1"){
+            localStorage.setItem('RanaSweetsAT','');
+            window.location = window.location.origin+'/Admin/index.html';
+        }
         if(response.data[0].Result=="True"){
+            $scope.AlterProduct.FinalCartProducts[i].Token=$scope.RanaSweetsAT;
             for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
                 $http({
                     url: window.location.origin+'/ServerPHP/Admin/UpdateSubOrders.php',
@@ -160,6 +198,10 @@ $scope.UpdateOrder = function () {
                   },
                   data:$scope.AlterProduct.FinalCartProducts[i]
               }).then(function (response) {
+                if(response.data[0].Result=="-1"){
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
                 $scope.AJAXCompletedRequests++;
                 if($scope.AJAXTotalRequests == $scope.AJAXCompletedRequests){
                     $scope.loadGrid(1);
@@ -227,26 +269,6 @@ $scope.DeleteSubProduct = function (productName) {
     $scope.UpdateSubProductsCosts();
 }
 
-$scope.ModalSave = function () {
-    $http({
-        url: window.location.origin+'/ServerPHP/Admin/PostProducts.php',
-        method: "POST",
-        headers: {
-          'Content-Type': 'multipart/form-data'
-      },
-      data:$scope.AlterProduct
-  })
-    .then(function(response) {
-        if(response.data[0].Result=="True"){
-            alert('Data Updated Successfully!');
-            $scope.loadGrid(1);
-            $scope.AlterProduct = new RSOrder();
-            document.getElementById('myModal').style.display = "none";
-        } else {
-            alert('Data Updation Failed!');
-        }
-    });
-}
 $scope.TotalCostChange = function () {
     $scope.AlterProduct.FinalCost = Math.round($scope.AlterProduct.TotalCost * (1-($scope.AlterProduct.DiscountPercentage / 100)));
 };

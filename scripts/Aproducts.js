@@ -2,7 +2,6 @@ var app = angular.module("RanaSweetsApp", []);
 
 app.controller('productController', ['$http','$scope','UtilityObject', function($http,$scope,Utility){
 
-    $scope.accessToken = "abcedfghijklmnopqrstuvwxyz";
     $scope.loading = false;
 
     $scope.Categories = [];
@@ -24,6 +23,34 @@ app.controller('productController', ['$http','$scope','UtilityObject', function(
  $scope.currentPage = 1;
  $scope.PagingMessage = "";
 
+ $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+
+    if($scope.RanaSweetsAT.length == 100){
+        $http({
+                url: window.location.origin+'/ServerPHP/Admin/ValidateAuthToken.php',
+                method: "POST",
+                data: { 'Token':$scope.RanaSweetsAT}
+            })
+      .then(function(response) {
+                // success
+                if(response.data[0].Result=="True"){
+
+                } else {
+                    console.log(response);
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
+            }).catch(function(response) { 
+                // failure
+                console.log(response);
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            });
+        } else {
+            localStorage.setItem('RanaSweetsAT','');
+            window.location = window.location.origin+'/Admin/index.html';
+        }
+
  $scope.AlterProduct = new RSProduct();
 
  function Error(Message) {
@@ -41,7 +68,6 @@ app.controller('productController', ['$http','$scope','UtilityObject', function(
             $scope.loading = false;
             $scope.BindGrid = [];
             for (var i = 0; i < response.data.length; i++) {
-                console.log(response.data[i].PhotoURL);
                 if(!(response.data[i].PhotoURL=="" || response.data[i].PhotoURL== null || response.data[i].PhotoURL=="undefined")){
                     response.data[i].PhotoURL = "default.png";
                 }
@@ -72,6 +98,7 @@ app.controller('productController', ['$http','$scope','UtilityObject', function(
     };
 
     $scope.DeleteProduct = function (productName,productID) {
+        $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
         if(confirm('Are you sure you want to delete '+productName+ ' ?')){
             $http({
             url: window.location.origin+'/ServerPHP/Admin/DeleteProducts.php',
@@ -79,9 +106,13 @@ app.controller('productController', ['$http','$scope','UtilityObject', function(
             headers: {
               'Content-Type': 'multipart/form-data'
             },
-            data:{"ID":productID}
+            data:{"ID":productID,'Token':$scope.RanaSweetsAT}
             })
             .then(function(response) {
+                if(response.data[0].Result=="-1"){
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
                 if(response.data[0].Result=="True"){
                     alert('Product Deleted Successfully!');
                     $scope.loadGrid(1);
@@ -111,6 +142,8 @@ $scope.InitEditNewProduct =function (currentProduct) {
 };
 
 $scope.ModalSave = function () {
+    $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+    $scope.AlterProduct.Token=$scope.RanaSweetsAT;
     $http({
             url: window.location.origin+'/ServerPHP/Admin/PostProducts.php',
             method: "POST",
@@ -120,6 +153,10 @@ $scope.ModalSave = function () {
             data:$scope.AlterProduct
         })
         .then(function(response) {
+            if(response.data[0].Result=="-1"){
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            }
             if(response.data[0].Result=="True"){
                 alert('Data Updated Successfully!');
                 $scope.loadGrid(1);

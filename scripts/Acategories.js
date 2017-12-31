@@ -2,7 +2,6 @@ var app = angular.module("RanaSweetsApp", []);
 
 app.controller('categoryController', ['$http','$scope','UtilityObject', function($http,$scope,Utility){
 
-    $scope.accessToken = "abcedfghijklmnopqrstuvwxyz";
     $scope.loading = false;
 
  //declaring the variable
@@ -12,6 +11,33 @@ app.controller('categoryController', ['$http','$scope','UtilityObject', function
  $scope.PageSize = 10;
  $scope.currentPage = 1;
  $scope.PagingMessage = "";
+ $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+
+    if($scope.RanaSweetsAT.length == 100){
+        $http({
+                url: window.location.origin+'/ServerPHP/Admin/ValidateAuthToken.php',
+                method: "POST",
+                data: { 'Token':$scope.RanaSweetsAT}
+            })
+      .then(function(response) {
+                // success
+                if(response.data[0].Result=="True"){
+
+                } else {
+                    console.log(response);
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
+            }).catch(function(response) { 
+                // failure
+                console.log(response);
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            });
+        }else {
+            localStorage.setItem('RanaSweetsAT','');
+            window.location = window.location.origin+'/Admin/index.html';
+        }
 
  $scope.AlterCategory = new RSCategory();
 
@@ -57,6 +83,7 @@ app.controller('categoryController', ['$http','$scope','UtilityObject', function
     };
 
     $scope.DeleteCategory = function (categoryName,categoryID) {
+        $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
         if(confirm('Are you sure you want to delete '+categoryName+ ' ? Deleting Category will delete all linked products!')){
             $http({
             url: window.location.origin+'/ServerPHP/Admin/DeleteCategories.php',
@@ -64,9 +91,13 @@ app.controller('categoryController', ['$http','$scope','UtilityObject', function
             headers: {
               'Content-Type': 'multipart/form-data'
             },
-            data:{"ID":productID}
+            data:{"ID":productID,,'Token':$scope.RanaSweetsAT}
             })
             .then(function(categoryID) {
+                if(response.data[0].Result=="-1"){
+                    localStorage.setItem('RanaSweetsAT','');
+                    window.location = window.location.origin+'/Admin/index.html';
+                }
                 if(response.data[0].Result=="True"){
                     alert('Category and Products Related Deleted Successfully!');
                     $scope.loadGrid(1);
@@ -96,6 +127,8 @@ $scope.InitEditNewCategory =function (currentCategory) {
 };
 
 $scope.ModalSave = function () {
+    $scope.RanaSweetsAT = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+    $scope.AlterCategory.Token=$scope.RanaSweetsAT;
     $http({
             url: window.location.origin+'/ServerPHP/Admin/PostCategories.php',
             method: "POST",
@@ -105,6 +138,10 @@ $scope.ModalSave = function () {
             data:$scope.AlterCategory
         })
         .then(function(response) {
+            if(response.data[0].Result=="-1"){
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            }
             if(response.data[0].Result=="True"){
                 alert('Data Updated Successfully!');
                 $scope.loadGrid(1);

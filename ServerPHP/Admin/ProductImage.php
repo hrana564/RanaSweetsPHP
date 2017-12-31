@@ -5,6 +5,15 @@
 
 	require_once '../Utils/DBConfig.php';
 	require_once '../Utils/PHPFunctions.php';
+	$Token = $_POST['Token'];
+
+	$IsAuthenticated = ValidateToken($Token,$conn);
+	if($IsAuthenticated  != 1){
+		echo "<script type=\"text/javascript\">window.location = window.location.origin+'/Admin/index.html';</script>";
+		exit();
+	}
+
+
 	parse_str($_SERVER['QUERY_STRING']);
 
 	$target_dir = $_SERVER['DOCUMENT_ROOT']."/images/Products/";
@@ -59,8 +68,14 @@
 
 	   <form action="#" method="POST" enctype="multipart/form-data">
          <input type="file" name="image" />
+         <input type="hidden" name="Token" value="" id="Token">
          <input type="submit"/>
       </form>
-
+<script type="text/javascript">
+	if((typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "").length !=100){
+		window.location = window.location.origin+'/Admin/index.html';
+	}
+	document.getElementById("Token").value = typeof localStorage.getItem('RanaSweetsAT') == "string" &&  localStorage.getItem('RanaSweetsAT') != "undefined" ? localStorage.getItem('RanaSweetsAT') : "";
+</script>
 </body>
 </html>

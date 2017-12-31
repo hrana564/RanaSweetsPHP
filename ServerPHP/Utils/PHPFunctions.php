@@ -37,11 +37,14 @@ function ValidateToken($Token,$conn) {
 		if ($result->num_rows > 0) {
 			return "1";
 		} else {
-			return "-2";
+
 		}
 	} else {
-		return "-1";
+		
 	}
+	$sql = "update mstusers set AuthToken='' where AuthToken='$Token'";
+	$result = $conn->query($sql);
+	return "-1";
 }
 
 ?>
