@@ -91,7 +91,7 @@ app.controller('categoryController', ['$http','$scope','UtilityObject', function
             headers: {
               'Content-Type': 'multipart/form-data'
             },
-            data:{"ID":productID,,'Token':$scope.RanaSweetsAT}
+            data:{"ID":categoryID,'Token':$scope.RanaSweetsAT}
             })
             .then(function(categoryID) {
                 if(response.data[0].Result=="-1"){
@@ -149,6 +149,26 @@ $scope.ModalSave = function () {
                  document.getElementById('myModal').style.display = "none";
             } else {
                 alert('Data Updation Failed!');
+            }
+        });
+}
+
+$scope.Logout = function () {
+    $http({
+            url: window.location.origin+'/ServerPHP/Admin/Logout.php',
+            method: "POST",
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            data:{'Token':$scope.RanaSweetsAT}
+        })
+        .then(function(response) {
+            if(response.data[0].Result=="True"){
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            } else {
+                console.log(response);
+                alert('Not able to Logout! Contact Sysadmin ASAP.');
             }
         });
 }

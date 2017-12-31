@@ -167,6 +167,25 @@ $scope.ModalSave = function () {
             }
         });
 }
+$scope.Logout = function () {
+    $http({
+            url: window.location.origin+'/ServerPHP/Admin/Logout.php',
+            method: "POST",
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            data:{'Token':$scope.RanaSweetsAT}
+        })
+        .then(function(response) {
+            if(response.data[0].Result=="True"){
+                localStorage.setItem('RanaSweetsAT','');
+                window.location = window.location.origin+'/Admin/index.html';
+            } else {
+                console.log(response);
+                alert('Not able to Logout! Contact Sysadmin ASAP.');
+            }
+        });
+}
 
 }]);
 app.service("UtilityObject", Utility);
