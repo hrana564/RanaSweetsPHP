@@ -97,24 +97,64 @@
           <div style="vertical-align: middle;">
              <h3>Checkout</h3>
              <span ng-if="PlaceOrder.DiscountPercentage>0">
-               Total Price &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : {{FinalCartProducts.reduce(add, 0)}}<br />
-               Discount &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{PlaceOrder.DiscountPercentage}}%
-               <hr>
+               <span style="color: darkblue;font-weight: bold;">Total Price &nbsp;&nbsp;&nbsp;&nbsp;: {{FinalCartProducts.reduce(add, 0)}}</span><br />
+               <span style="color: #FF4500;font-weight: bold;">Discount &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{PlaceOrder.DiscountPercentage}}%</span><br />
              </span>
-             Final Amount : {{FinalCartProducts.reduce(add, 0) * (1-(PlaceOrder.DiscountPercentage/100))}}<br />
-             Name<span style="color: red;">*</span> : <input type="text" ng-model="PlaceOrder.Name"> <br /><br />
-             Mobile<span style="color: red;">*</span> : <input type="text" ng-model="PlaceOrder.Mobile"> <br /><br />
-             Email : <input type="text" ng-model="PlaceOrder.Email"> <br /><br />
-             Delivery Date<span style="color: red;">*</span> :
-              <select ng-model="PlaceOrder.DateOfDelivery">
-                <option ng-repeat="singleDate in DeliveryDates" value="{{singleDate.value}}">{{singleDate.text}}</option>
-              </select>
-              <br/><br/>
-             Address<span style="color: red;">*</span> : <textarea ng-model="PlaceOrder.Address"></textarea> <br /><br />
-             <button class="btn btn-success" ng-click="PlaceOrderFinal()">Place Order</button><br /><br />
+             <span style="color: darkgreen;font-weight: bold;">Final Amount : {{FinalCartProducts.reduce(add, 0) * (1-(PlaceOrder.DiscountPercentage/100))}}</span> <br />
+             <hr>
+             <table cellpadding="10">
+               <tbody>
+                 <tr>
+                  <td>
+                    Name <span style="color: red;">*</span> :
+                  </td>
+                  <td>
+                    <input type="text" ng-model="PlaceOrder.Name">
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                    Mobile <span style="color: red;">*</span> :
+                  </td>
+                  <td>
+                    <input type="text" ng-model="PlaceOrder.Mobile">
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                    Email :
+                  </td>
+                  <td>
+                    <input type="text" ng-model="PlaceOrder.Email">
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                    Delivery Date <span style="color: red;">*</span> :
+                  </td>
+                  <td>
+                    <select ng-model="PlaceOrder.DateOfDelivery">
+                      <option ng-repeat="singleDate in DeliveryDates" value="{{singleDate.value}}">{{singleDate.text}}</option>
+                    </select>
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                    Address <span style="color: red;">*</span> :
+                  </td>
+                  <td>
+                    <textarea ng-model="PlaceOrder.Address"></textarea>
+                  </td>
+                 </tr>
+                 <tr>
+                   <td colspan="2" style="text-align: center;">
+                     <button class="btn btn-success" ng-click="PlaceOrderFinal()">Place Order</button>
+                   </td>
+                 </tr>
+               </tbody>
+             </table>
           </div>
         </div>
-
       </div>
       <!-- /.row -->
 

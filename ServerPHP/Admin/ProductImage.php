@@ -5,14 +5,15 @@
 
 	require_once '../Utils/DBConfig.php';
 	require_once '../Utils/PHPFunctions.php';
-	$Token = $_POST['Token'];
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		$Token = $_POST['Token'];
 
-	$IsAuthenticated = ValidateToken($Token,$conn);
-	if($IsAuthenticated  != 1){
-		echo "<script type=\"text/javascript\">window.location = window.location.origin+'/Admin/index.html';</script>";
-		exit();
+			$IsAuthenticated = ValidateToken($Token,$conn);
+			if($IsAuthenticated  != 1){
+				echo "<script type=\"text/javascript\">window.location = window.location.origin+'/Admin/index.html';</script>";
+				exit();
+			}
 	}
-
 
 	parse_str($_SERVER['QUERY_STRING']);
 

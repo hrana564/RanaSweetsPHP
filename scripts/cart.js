@@ -75,7 +75,7 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 		if(i==0) $scope.PlaceOrder.DateOfDelivery = tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate();
 	}
 	$scope.PlaceOrderFinal = function () {
-		if($scope.FinalCartProducts,length==0){
+		if($scope.FinalCartProducts.length==0){
 			alert('Your Cart is Empty. Please add products to your cart!')
 		}
 		if($scope.PlaceOrder.Name==""){
@@ -90,7 +90,7 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 			alert('Mobile Number is Mandatory. Please Enter your Mobile Number!');
 			return;
 		}
-		if($scope.PlaceOrder.Mobile.length != 10 || isNAN($scope.PlaceOrder.Mobile) == true){
+		if($scope.PlaceOrder.Mobile.length != 10 || isNaN($scope.PlaceOrder.Mobile) == true){
 			alert('Invalid Mobile number detected. Mobile Number should be 10 digits only!');
 			return;
 		}

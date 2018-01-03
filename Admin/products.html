@@ -216,9 +216,9 @@
               <td>{{singleProduct.Price}}</td>
               <td>{{singleProduct.Description}}</td>
               <td>{{singleProduct.Category}}</td>
-              <td>{{singleProduct.InStock?'YES':'NO'}}</td>
+              <td>{{singleProduct.InStock==1?'YES':'NO'}}</td>
               <td><a href="/ServerPHP/Admin/ProductImage.php?OrderID={{singleProduct.ID}}" target="_blank">View</a></td>
-              <td>{{singleProduct.IsActive?'YES':'NO'}}</td>
+              <td>{{singleProduct.IsActive==1?'YES':'NO'}}</td>
               <td>{{singleProduct.CreatedOn}}</td>
               <td>{{singleProduct.LastUpdatedOn}}</td>
               <td><button class="btn btn-primary" ng-click='InitEditNewProduct(singleProduct)'>  &#9998;</button></td>
