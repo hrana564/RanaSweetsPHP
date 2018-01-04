@@ -21,6 +21,8 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 		method: "GET",
 	})
 	.then(function(response) {
+		document.getElementById("loadingPAGE").style.display="none";
+		document.getElementById("mainPAGE").style.display="block";
 		$scope.loading = false;
 		$scope.BindGrid = [];
 		for (var i = 0; i < response.data.length; i++) {
