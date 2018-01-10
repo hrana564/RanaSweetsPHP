@@ -64,11 +64,13 @@ $myObj->ImgToken = generateRandomString();
 
 $myJSON = json_encode($myObj);
 
-$sql = "INSERT INTO `Trn_Captcha`(`ImgToken`, `ImgActualString`) VALUES ('$myObj->ImgToken','$random_text')";
+$sql = "INSERT INTO `trn_captcha`(`ImgToken`, `ImgActualString`) VALUES ('$myObj->ImgToken','$random_text')";
 
 $result = mysqli_query($conn,$sql);
 
-echo $myJSON;
+if($result === True){
+	echo $myJSON;
+}
 
 //print '<p><img src="data:image/png;base64,'.base64_encode($imagedata).'" alt="image 1" width="130" height="30"/></p>';
 

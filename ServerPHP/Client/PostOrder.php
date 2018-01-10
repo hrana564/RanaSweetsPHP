@@ -11,11 +11,11 @@ $OCObj = json_decode($OD);
 $OCArray = json_decode($OC);
 try {	
 	// Query the database to show all the tables.
-	$sql = "Select * from `Trn_Captcha` where `ImgToken`='$OCObj->ImgToken' and `ImgActualString`='$OCObj->ImgActualString'";
+	$sql = "Select * from `trn_captcha` where `ImgToken`='$OCObj->ImgToken' and `ImgActualString`='$OCObj->ImgActualString'";
 	$result = mysqli_query($conn, $sql);
 	// Print the results of the sql query.
 	while($row = mysqli_fetch_array($result)) {
-		$sql = "delete from `Trn_Captcha` where `ImgToken`='$OCObj->ImgToken' and `ImgActualString`='$OCObj->ImgActualString'";
+		$sql = "delete from `trn_captcha` where `ImgToken`='$OCObj->ImgToken' and `ImgActualString`='$OCObj->ImgActualString'";
 		$result = mysqli_query($conn,$sql);
 		/* set autocommit to off */
 		mysqli_begin_transaction($conn, MYSQLI_TRANS_START_READ_WRITE);
