@@ -1,21 +1,15 @@
 <?php
-
-require_once '../Utils/DBConfig.php';
+require_once '../Utils/DBConfig.php';			
 parse_str($_SERVER['QUERY_STRING']);
-$sql = "Select * from Categories where IsActive=True";
+
+// Query the database to show all the tables.
+$query = "Select * from categories as Categories where IsActive=True";
 $data = array();
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
-} else {
-    echo "[]";
+$result = mysqli_query($conn, $query);
+// Print the results of the query.
+while($row = mysqli_fetch_array($result)) {
+	$data[] = $row;
 }
 echo json_encode($data);
-$conn->close();
 
 ?>

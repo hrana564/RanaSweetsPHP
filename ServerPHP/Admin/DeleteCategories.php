@@ -13,9 +13,9 @@ if($IsAuthenticated  != 1){
 	exit();
 }
 
-$sql = "Delete from Products where CategoryID = $ID;Delete from `Categories` where `ID`=$ID";
+$sql = "Delete from products where CategoryID = $ID;Delete from `categories` where `ID`=$ID";
 
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
     echo "[{\"Result\":\"True\"}]";
 } else {

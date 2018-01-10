@@ -44,7 +44,7 @@
 			$errors[]='Internal error occured while moving image';
 		}
 		$sql = "update `products` set `PhotoURL`='$NewFileName' where `ID`=$OrderID";
-		$result = $conn->query($sql);
+		$result = mysqli_query($conn, $sql);
 		if ($result===True) {
 			echo "Success";
 		} else {
@@ -54,8 +54,8 @@
 	}
 
 	$sql = "Select `PhotoURL` FROM `products` where `ID`=$OrderID";
-	$result = $conn->query($sql);
-	while($row = $result->fetch_assoc()) {
+	$result = mysqli_query($conn, $sql);
+	while($row = mysqli_fetch_array($result)) {
 		$PhotoURL = $row["PhotoURL"];
 	}
 
@@ -63,7 +63,6 @@
 		$PhotoURL = "default.png";
 	}
 	echo "<div style=\"width: 250px; height: 150px;\"><img src=\"/images/Products/$PhotoURL\" style=\"width: 100%; height: 100%\"></div>" ;
-	$conn->close();
 
 	?>
 

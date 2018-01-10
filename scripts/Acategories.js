@@ -93,7 +93,7 @@ app.controller('categoryController', ['$http','$scope','UtilityObject', function
             },
             data:{"ID":categoryID,'Token':$scope.RanaSweetsAT}
             })
-            .then(function(categoryID) {
+            .then(function(response) {
                 if(response.data[0].Result=="-1"){
                     localStorage.setItem('RanaSweetsAT','');
                     window.location = window.location.origin+'/Admin/index.html';

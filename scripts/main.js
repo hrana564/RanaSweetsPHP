@@ -13,6 +13,7 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 
 	$scope.Categories = [];
 	$scope.loading = true;
+	$scope.productAddedSuccess = false;
 	$scope.CartProducts = typeof localStorage.getItem('RanaSweetsCart') == "string" &&  localStorage.getItem('RanaSweetsCart') != "undefined" ? JSON.parse(localStorage.getItem('RanaSweetsCart')) : [];
 
 	$scope.AllProducts = [];
@@ -26,7 +27,6 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 		$scope.loading = false;
 		$scope.BindGrid = [];
 		for (var i = 0; i < response.data.length; i++) {
-			console.log(response.data[i].PhotoURL);
             if(response.data[i].PhotoURL=="" || response.data[i].PhotoURL== null || response.data[i].PhotoURL=="undefined" || response.data[i].PhotoURL==undefined){
 				response.data[i].PhotoURL = "default.png";
             } else {
@@ -48,15 +48,21 @@ app.controller('mainController', ['$http','$scope', function($http,$scope){
 	});
 
 	$scope.AddToCart = function(productName, Quantity){
+		$scope.productAddedSuccess = false;
+		if(Quantity=="" || Quantity=="undefined" || Quantity==null || isNaN(Quantity) == true || Quantity<=0) Quantity=1;
 		for (var i = 0; i <$scope.CartProducts.length; i++) {
 			if($scope.CartProducts[i].Name == productName){
 				$scope.CartProducts[i].Quantity = Number($scope.CartProducts[i].Quantity) + Number(Quantity);
 				localStorage.setItem('RanaSweetsCart', JSON.stringify($scope.CartProducts));
+				$scope.productAddedSuccess = true;
+				document.body.scrollTop = document.documentElement.scrollTop = 0;
 				return;
 			};
 		}
 		$scope.CartProducts.push({"Name":productName,"Quantity":Number(Quantity)});
 		localStorage.setItem('RanaSweetsCart', JSON.stringify($scope.CartProducts));
+		$scope.productAddedSuccess = true;
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
 	};
 
 	$scope.FilterProductsCategories = function(){

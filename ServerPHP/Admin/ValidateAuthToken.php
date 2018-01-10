@@ -12,6 +12,5 @@ if($IsAuthenticated  == 1){
 } else {
 	echo "[{\"Result\":\"False\"}]";
 }
-$conn->close();
 
 ?>

@@ -19,12 +19,11 @@ if($IsAuthenticated  != 1){
 
 $sql = "Update `orderproducts` set `Name`='$Name', `TotalCost`=$TotalCost, `Quantity`=$Quantity, `PricePerKG`=$PricePerKG, `LastUpdatedOn`=NOW() where `ID`=$ID";
 
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
     echo "[{\"Result\":\"True\"}]";
 } else {
     echo "[{\"Result\":\"False\"}]";
 }
-$conn->close();
 
 ?>

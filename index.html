@@ -21,6 +21,13 @@
       left:0px;
       z-index:1000;
     }
+    /* The Close Button */
+    .close {
+      color: #000;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
   </style>
 
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
@@ -49,15 +56,16 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-      	<div style="overflow:auto; width: 80%">
+      	<div style="overflow:auto; width: 86%">
       		<div style="float:left;">
             <a class="navbar-brand" href="./index.html">Rana Sweets & Farsan</a>
           </div>
           <div style="float:right;">
-            <a href="./cart.html" style="float: right;font-weight: bold;font-size: 30px;color: #B8860B;">{{CartProducts.length==0?'':CartProducts.length}}🛒</a>
+            <!-- 🛒 -->
+            <a href="./cart.html" style="float: right;font-weight: bold;font-size: 30px;color: #B8860B;"><img src="/images/cart.png" style="width: 30px; height: 30px;">{{CartProducts.length==0?'':CartProducts.length}}</a>            
           </div>
         </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="padding: 0;">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -79,19 +87,28 @@
     </nav>
     <!-- Page Content -->
     <div class="container">
-
+    <div class="row">
+      <div class="alert alert-success col-md-12" ng-show="productAddedSuccess" style="margin-top: 10px;text-align: center;">
+        <div style="width: 80%;float: left;">
+          <strong>Success!</strong> Product was Successfully added to your Cart.
+        </div>
+        <div style="width: 20%;float: right;">
+          <span class="close" style="cursor: pointer;" ng-click="productAddedSuccess = false">&times;</span>
+        </div>
+      </div>
+    </div>
       <div class="row">
         <div class="col-lg-3"> &nbsp;
         	<div>
            <h3 style="text-align: center;">Rana Brothers</h3>
-           <p>We deliver sweets across Mumbai, Thane and Nearby Locations & we specialize in Customized Desserts for Special Occasions such as parties, birthdays, anniversaries, weddings & more
+           <p>We deliver sweets across Vasai Road, Mumbai("Station Delivery") and Nearby Locations & we specialize in Customized Desserts for Special Occasions such as parties, birthdays, anniversaries, weddings & more.
             <br />Pankaj Rana : <a href="tel:98 236 25630" style="color: red;font-size: 1.10rem">☏ 98-236-25630</a>
             <br />Dilip Rana : &nbsp;&nbsp;&nbsp;<a href="tel:98 239 34483" style="color: red;font-size: 1.10rem">☏ 98-239-34483</a></p>
           </div>
           <h3>Filters</h3>
           <div class="list-group">
            <label ng-repeat="category in Categories">
-             <span class="list-group-item" style="padding: .025rem 0.25rem"><input type="checkbox" ng-model="category.IsSelected" ng-change="FilterProductsCategories()" value="{{category.Name}}"> {{category.Name}}</span>
+             <span class="list-group-item" style="padding: .025rem 0.25rem"><input type="checkbox" ng-model="category.IsSelected" ng-change="FilterProductsCategories()" value="{{category.Name}}"> <span ng-bind="category.Name"></span></span>
            </label>
          </div>
 
@@ -146,8 +163,8 @@
                 </h5>
                 <div ng-if="SingleProduct.InStock==1">
                   <span style="font-weight: bold;">₹ {{SingleProduct.Price}} / KG </span>
-                  <input type="text" ng-model="SingleProduct.orderedQuantity" style="width: 35px"> 
-                  <button class="btn btn-danger" ng-click="AddToCart(SingleProduct.Name,SingleProduct.orderedQuantity);SingleProduct.orderedQuantity=''">+ 🛒</button>
+                  <input type="text" ng-model="SingleProduct.orderedQuantity" style="width: 35px" ng-init="SingleProduct.orderedQuantity=1"> 
+                  <button class="btn btn-danger" ng-click="AddToCart(SingleProduct.Name,SingleProduct.orderedQuantity);SingleProduct.orderedQuantity='1'">+ 🛒</button>
                 </div>
                 <div ng-if="SingleProduct.InStock==0">
                  <button class="btn btn-danger" disabled="disabled">Out Of Stock</button>
@@ -172,7 +189,7 @@
  <!-- Footer -->
  <footer class="py-5 bg-dark">
   <div class="container">
-    <p class="m-0 text-center text-white">Copyright &copy; Rana Sweets 2017. Developed by Himanshu Rana <a href="tel:85 5102 6626" style="color: #5F9EA0;font-size: 1.10rem">☏ 85-5102-6626</a></p>
+    <p class="m-0 text-center text-white">Copyright &copy; Rana Sweets 2017. Developed by Ketan Rana <a href="tel:77 9840 1344" style="color: #5F9EA0;font-size: 1.10rem">☏ 77-9840-1344</a></p>
   </div>
   <!-- /.container -->
 </footer>

@@ -15,7 +15,7 @@ if($IsAuthenticated  != 1){
 
 $sql = "Call A_DeleteOrder ($ID)";
 
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
     echo "[{\"Result\":\"True\"}]";
 } else {

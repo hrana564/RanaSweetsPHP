@@ -16,17 +16,16 @@ if($IsAuthenticated  != 1){
 }
 
 if($ID ==""){
-	$sql = "INSERT INTO `Categories`(`Name`, `IsActive`, `CreatedOn`, `LastUpdatedOn`) Select '$Name',$IsActive,NOW(),NOW()";
+	$sql = "INSERT INTO `categories`(`Name`, `IsActive`, `CreatedOn`, `LastUpdatedOn`) Select '$Name',$IsActive,NOW(),NOW()";
 } else{
-	$sql = "Update `Categories` set `Name`='$Name', `IsActive`=$IsActive, `LastUpdatedOn`=NOW() where `ID`=$ID";
+	$sql = "Update `categories` set `Name`='$Name', `IsActive`=$IsActive, `LastUpdatedOn`=NOW() where `ID`=$ID";
 }
 
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
     echo "[{\"Result\":\"True\"}]";
 } else {
     echo "[{\"Result\":\"False\"}]";
 }
-$conn->close();
 
 ?>

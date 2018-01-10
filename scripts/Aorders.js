@@ -188,8 +188,8 @@ $scope.UpdateOrder = function () {
             window.location = window.location.origin+'/Admin/index.html';
         }
         if(response.data[0].Result=="True"){
-            $scope.AlterProduct.FinalCartProducts[i].Token=$scope.RanaSweetsAT;
             for (var i = 0; i < $scope.AlterProduct.FinalCartProducts.length; i++) {
+                $scope.AlterProduct.FinalCartProducts[i].Token=$scope.RanaSweetsAT;
                 $http({
                     url: window.location.origin+'/ServerPHP/Admin/UpdateSubOrders.php',
                     method: "POST",

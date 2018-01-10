@@ -12,7 +12,8 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 	$scope.AllProducts = [];
 	$scope.TempCartProducts = [];
 	$scope.loading = true;
-	$scope.DiscountPercentage = 10;
+	$scope.DiscountPercentage = 5;
+	$scope.ImgSrc = "";
 	$scope.PlaceOrder={
 		"Name":"",
 		"Mobile":"",
@@ -21,7 +22,9 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 		"Address":"",
 		"TotalCost":0,
 		"DiscountPercentage":$scope.DiscountPercentage,
-		"FinalCost":0
+		"FinalCost":0,
+		"ImgToken" : "",
+		"ImgActualString" : ""
 	}
 
 	$http({
@@ -76,9 +79,23 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 		$scope.DeliveryDates.push({"text":tmpDate.toDateString(),"value":tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate()});
 		if(i==0) $scope.PlaceOrder.DateOfDelivery = tmpDate.getFullYear()+"-"+(tmpDate.getMonth()+1)+"-"+tmpDate.getDate();
 	}
+	$scope.LoadFreshCaptcha = function () {
+		$http({
+			url: window.location.origin+'/ServerPHP/Client/GetCaptchaImage.php',
+			method: "GET",
+		})
+		.then(function(response) {
+			$scope.ImgSrc = response.data.ImgSrc;
+			$scope.PlaceOrder.ImgToken = response.data.ImgToken;
+		});
+		$scope.PlaceOrder.ImgToken = "";
+		$scope.PlaceOrder.ImgActualString = "";
+	}
+	$scope.LoadFreshCaptcha();
 	$scope.PlaceOrderFinal = function () {
 		if($scope.FinalCartProducts.length==0){
 			alert('Your Cart is Empty. Please add products to your cart!')
+			return;
 		}
 		if($scope.PlaceOrder.Name==""){
 			alert('Name is Mandatory. Please Enter your name!');
@@ -108,34 +125,40 @@ app.controller('cartController', ['$http','$scope', function($http,$scope){
 		$scope.PlaceOrder.FinalCost = $scope.FinalCartProducts.reduce($scope.add, 0) * (1-($scope.PlaceOrder.DiscountPercentage/100)) ;
 
 		$http({
-            url: window.location.origin+'/ServerPHP/Client/PostOrder.php',
-            method: "POST",
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            data:{"OD":JSON.stringify($scope.PlaceOrder), "OC":JSON.stringify($scope.FinalCartProducts)}
-            })
-            .then(function(response) {
-                if(response.data[0].Result=="True"){
-                    alert('Thankyou! Order Placed Successfully. We will get in touch with you soon :)');
-                    $scope.loadGrid(1);
-                } else {
-                    alert('Error occoured while placing order! Call 9823625630 for support.');
-                }
-            });
-
-		$scope.PlaceOrder={
-			"Name":"",
-			"Mobile":"",
-			"Email":"",
-			"DateOfDelivery":"",
-			"Address":"",
-			"TotalCost":0,
-			"DiscountPercentage":$scope.DiscountPercentage,
-			"FinalCost":0
-		}
-		$scope.FinalCartProducts = [];
-		$scope.UpdateCartProduct();
+		url: window.location.origin+'/ServerPHP/Client/PostOrder.php',
+		method: "POST",
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		},
+		data:{"OD":JSON.stringify($scope.PlaceOrder), "OC":JSON.stringify($scope.FinalCartProducts)}
+		})
+		.then(function(response) {
+			if(response.data[0].Result=="InvalidCaptcha"){
+				$scope.LoadFreshCaptcha();
+				alert('Invalid Captcha Entered! Please Enter Correct Captcha.');
+				return;
+			}
+		    else if(response.data[0].Result=="True"){
+		        alert('Thankyou! Order Placed Successfully. We will get in touch with you soon :)');
+		        $scope.PlaceOrder={
+					"Name":"",
+					"Mobile":"",
+					"Email":"",
+					"DateOfDelivery":"",
+					"Address":"",
+					"TotalCost":0,
+					"DiscountPercentage":$scope.DiscountPercentage,
+					"FinalCost":0,
+					"ImgToken" : "",
+					"ImgActualString" : ""
+				}
+				$scope.FinalCartProducts = [];
+				$scope.UpdateCartProduct();
+		    } else {
+		        alert('Error occoured while placing order! Call 9823625630 for support.');
+		        return;
+		    }
+		});
 	}
 
  }]);

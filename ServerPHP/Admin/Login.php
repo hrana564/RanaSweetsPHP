@@ -10,6 +10,4 @@ $password  = $_POST['password'];
 $UserToken = AuthenticateUser($userName,$password,$conn);
 echo "[{\"AuthToken\":\"$UserToken\"}]";
 
-$conn->close();
-
 ?>

@@ -34,27 +34,29 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-      	<div style="overflow:auto; width: 80%">
-      		<div style="float:left;">
+        <div style="overflow:auto; width: 86%">
+          <div style="float:left;">
             <a class="navbar-brand" href="./index.html">Rana Sweets & Farsan</a>
           </div>
           <div style="float:right;">
-            <a href="#" style="float: right;font-weight: bold;font-size: 30px;color: #B8860B;">{{CartProducts.length==0?'':CartProducts.length}}🛒</a>
+            <!-- 🛒 -->
+            <a href="./cart.html" style="float: right;font-weight: bold;font-size: 30px;color: #B8860B;"><img src="/images/cart.png" style="width: 30px; height: 30px;">{{CartProducts.length==0?'':CartProducts.length}}</a>            
           </div>
         </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="padding: 0;">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="/index.html">Home
+                <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Services</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="/AboutUSContactUS.html">About/Contact</a>
             </li>
           </ul>
@@ -152,6 +154,20 @@
                 </td>
               </tr>
               <tr>
+                <td>
+                  Please enter <span style="color: red;">*</span> :
+                </td>
+                <td>
+                  <img ng-src="data:image/png;base64,{{ImgSrc}}" style="margin: 5px" /><a ng-click="LoadFreshCaptcha()" style="cursor: pointer;">Reload</a><br />
+                  <input type="text" ng-model="PlaceOrder.ImgActualString">
+                </td>
+              </tr>
+              <tr>
+               <td colspan="2" style="text-align: center; color: red;">
+                 Free Delivery in only in Vasai.Rest locations will be discussed on Order Confirmation Call.*
+               </td>
+             </tr>
+              <tr>
                <td colspan="2" style="text-align: center;">
                  <button class="btn btn-success" ng-click="PlaceOrderFinal()">Place Order</button>
                </td>
@@ -169,7 +185,7 @@
  <!-- Footer -->
  <footer class="py-5 bg-dark">
   <div class="container">
-    <p class="m-0 text-center text-white">Copyright &copy; Rana Sweets 2017. Developed by Himanshu Rana <a href="tel:85 5102 6626" style="color: #5F9EA0;font-size: 1.10rem">☏ 85-5102-6626</a></p>
+    <p class="m-0 text-center text-white">Copyright &copy; Rana Sweets 2017. Developed by Ketan Rana <a href="tel:77 9840 1344" style="color: #5F9EA0;font-size: 1.10rem">☏ 77-9840-1344</a></p>
   </div>
   <!-- /.container -->
 </footer>

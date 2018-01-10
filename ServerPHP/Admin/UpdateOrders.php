@@ -26,12 +26,11 @@ if($IsAuthenticated  != 1){
 
 $sql = "Update `orders` set `Name`='$Name', `Mobile`='$Mobile', `Email`='$Email', `DateOfDelivery`='$DateOfDelivery', `Address`='$Address', `TotalCost`=$TotalCost, `DiscountPercentage`=$DiscountPercentage, `FinalCost`=$FinalCost, `IsDelivered`=$IsDelivered, `Comments`='$Comments', `IsActive`=$IsActive, `LastUpdatedOn`=NOW() where `ID`=$ID";
 
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
     echo "[{\"Result\":\"True\"}]";
 } else {
     echo "[{\"Result\":\"False\"}]";
 }
-$conn->close();
 
 ?>

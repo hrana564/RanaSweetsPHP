@@ -7,13 +7,11 @@ $_POST = json_decode($rest_json, true);
 $Token = $_POST['Token'];
 
 $sql = "update mstusers set AuthToken='' where AuthToken='$Token'";
-$result = $conn->query($sql);
+$result = mysqli_query($conn, $sql);
 if ($result===True) {
 	echo "[{\"Result\":\"True\"}]";
 } else {
 	echo "[{\"Result\":\"False\"}]";
 }
-
-$conn->close();
 
 ?>

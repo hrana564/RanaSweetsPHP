@@ -1,16 +1,21 @@
 <?php
 
-$servername = 'localhost';
-$username = 'himanshu';
-$password = 'admin123';
-$database = 'ranasweets';
+$dbhost     = 'localhost';
+$dbname   = 'ranasweets';
+//$dbuser     = 'Ketan28';
+//$dbpass     = 'Admin@123';
+
+$dbuser     = 'himanshu';
+$dbpass     = 'admin123';
+
+
+$dbport      = '3306';
 
 // Create connection
-$conn = new mysqli($servername, $username, $password,$database);
-
+$conn = @mysqli_connect($dbhost,$dbuser,$dbpass,$dbname,$dbport);
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
+if (mysqli_connect_errno()) {
+	die ("Failed to connect to MySQL using the PHP mysqli extension: " . mysqli_connect_error());
+}
 
 ?>
