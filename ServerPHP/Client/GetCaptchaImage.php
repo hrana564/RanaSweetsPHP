@@ -38,7 +38,7 @@ ImageString($src,5,5,0,$text,$text_color); //
 /*if($i<3){$angle=rand(10,60);}
 else{$angle=0;}
 */
-$angle=rand(10,60);
+$angle=rand(10,20);
 $src = imagerotate($src, $angle, 0);
 $x=$i*20;
 imagecopy($im, $src, $x, 5, 0, 0, 20, 20);

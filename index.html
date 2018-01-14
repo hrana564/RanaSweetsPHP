@@ -155,16 +155,16 @@
           <div class="col-lg-4 col-md-6 mb-4" ng-repeat="SingleProduct in DispalyProducts" style="text-align: center;">
             <div class="card h-100">
               <div style="width: 250px; height: 150px;margin: auto;">
-                <a href="#"><img class="card-img-top" src="./images/Products/{{SingleProduct.PhotoURL}}" alt="" class="img-responsive" style="width: 100%; height: 100%"></a>
+                <span><img class="card-img-top" src="./images/Products/{{SingleProduct.PhotoURL}}" alt="" class="img-responsive" style="width: 100%; height: 100%"></span>
               </div>
               <div class="card-body">
                 <h5 class="card-title">
-                  <a href="#">{{SingleProduct.Name}}</a>
+                  <span style=" color: #F90B6D; font-size: 25px; font-family: 'Signika', sans-serif; padding-bottom: 10px;">{{SingleProduct.Name}}</span>
                 </h5>
                 <div ng-if="SingleProduct.InStock==1">
                   <span style="font-weight: bold;">₹ {{SingleProduct.Price}} / KG </span>
                   <input type="text" ng-model="SingleProduct.orderedQuantity" style="width: 35px" ng-init="SingleProduct.orderedQuantity=1"> 
-                  <button class="btn btn-danger" ng-click="AddToCart(SingleProduct.Name,SingleProduct.orderedQuantity);SingleProduct.orderedQuantity='1'">+ 🛒</button>
+                  <button class="btn btn-danger" ng-click="AddToCart(SingleProduct.Name,SingleProduct.orderedQuantity);SingleProduct.orderedQuantity='1'">Buy</button>
                 </div>
                 <div ng-if="SingleProduct.InStock==0">
                  <button class="btn btn-danger" disabled="disabled">Out Of Stock</button>
